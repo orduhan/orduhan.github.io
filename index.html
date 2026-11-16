@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Restoran stok takip ve reçete maliyet programı. Her porsiyonun gram bazlı maliyetini, şube stoklarını, tedarikçi carisini ve kâr/zararı tek ekranda görün. Çok şubeli kafe ve restoranlar için.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="OrSoft — Restoran Stok ve Reçete Maliyet Programı">
+<meta property="og:description" content="Her porsiyonun gram bazlı maliyetini bilin. Stok, sipariş, fatura, cari ve kâr/zarar tek programda.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="OrSoft">
+<meta property="og:url" content="https://orsoftyazilim.com/">
+<meta property="og:image" content="https://orsoftyazilim.com/gorseller/ana-ekran.jpg">
+<meta property="og:image:alt" content="OrSoft ana ekran: kritik stok, vadesi gelen ödemeler ve günün cirosu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OrSoft — Restoran Stok ve Reçete Maliyet Programı">
+<meta name="twitter:description" content="Her porsiyonun gram bazlı maliyetini bilin. Stok, sipariş, fatura, cari ve kâr/zarar tek programda.">
+<meta name="twitter:image" content="https://orsoftyazilim.com/gorseller/ana-ekran.jpg">
+<meta name="theme-color" content="#0F5E52">
+<style>
+  *{box-sizing:border-box}
+  html{color-scheme:light dark}
+  body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<title>OrSoft — Restoran Stok ve Reçete Maliyet Programı</title>
+<link rel="canonical" href="https://orsoftyazilim.com/">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"></noscript>
+
+<style>
+  :root{
+    --ground:#FAFAF8;
+    --surface:#FFFFFF;
+    --surface-2:#F2F4F1;
+    --ink:#171A16;
+    --ink-soft:#4A514A;
+    --muted:#6B7169;
+    --line:#DFE3DC;
+    --accent:#0F5E52;
+    --accent-soft:#E3EFEB;
+    --copper:#B4633A;
+    --shadow:0 1px 2px rgba(23,26,22,.05), 0 8px 24px -12px rgba(23,26,22,.18);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#101210;
+      --surface:#171A16;
+      --surface-2:#1D211C;
+      --ink:#ECEFE9;
+      --ink-soft:#BFC6BD;
+      --muted:#8B938A;
+      --line:#2A2F28;
+      --accent:#3FA894;
+      --accent-soft:#16302B;
+      --copper:#D08A5C;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#101210;
+    --surface:#171A16;
+    --surface-2:#1D211C;
+    --ink:#ECEFE9;
+    --ink-soft:#BFC6BD;
+    --muted:#8B938A;
+    --line:#2A2F28;
+    --accent:#3FA894;
+    --accent-soft:#16302B;
+    --copper:#D08A5C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:"Source Serif 4",Georgia,serif; font-size:17px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.grotesk{font-family:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif; text-wrap:balance}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+
+  .kap{max-width:1080px; margin:0 auto; padding:0 24px}
+  .etiket{
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); font-weight:600;
+  }
+
+  /* ── üst bar ── */
+  header{
+    position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  }
+  .bar{display:flex; align-items:center; gap:28px; height:64px}
+  .marka{font-family:"Bricolage Grotesque",sans-serif; font-weight:800; font-size:22px; letter-spacing:-.02em}
+  .marka span{color:var(--accent)}
+  nav{margin-left:auto; display:flex; gap:26px; align-items:center}
+  nav a{color:var(--ink-soft); text-decoration:none; font-size:15px}
+  nav a:hover{color:var(--accent)}
+  @media(max-width:760px){ nav a.gizle{display:none} }
+
+  .dugme{
+    display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border-radius:2px;
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:600; font-size:15px;
+    text-decoration:none; border:1px solid transparent; cursor:pointer;
+  }
+  .dugme-dolu{background:var(--accent); color:#fff}
+  .dugme-dolu:hover{filter:brightness(1.08)}
+  .dugme-bos{border-color:var(--line); color:var(--ink)}
+  .dugme-bos:hover{border-color:var(--accent); color:var(--accent)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+
+  /* ── hero ── */
+  .hero{padding:76px 0 64px; border-bottom:1px solid var(--line)}
+  .hero h1{
+    font-size:clamp(38px,6vw,62px); line-height:1.04; margin:16px 0 20px;
+    font-weight:800; letter-spacing:-.028em; max-width:16ch;
+  }
+  .hero p.spot{font-size:20px; color:var(--ink-soft); max-width:56ch; margin:0 0 30px}
+  .hero-eylem{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:26px}
+  .kunye{
+    display:flex; gap:10px; flex-wrap:wrap; font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px; color:var(--muted);
+  }
+  .kunye span::after{content:" ·"; color:var(--line)}
+  .kunye span:last-child::after{content:""}
+
+  /* ── dertler ── */
+  .bolum{padding:72px 0; border-bottom:1px solid var(--line)}
+  .bolum h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.02em; margin:14px 0 8px}
+  .bolum .alt{color:var(--muted); max-width:60ch; margin:0 0 36px}
+
+  .dert-liste{display:grid; gap:2px; background:var(--line); border:1px solid var(--line)}
+  .dert{background:var(--surface); padding:26px 24px}
+  .dert q{
+    display:block; font-size:19px; line-height:1.45; color:var(--ink);
+    font-style:italic; margin-bottom:12px;
+  }
+  .dert p{margin:0; color:var(--ink-soft); font-size:15.5px}
+  @media(min-width:820px){ .dert-liste{grid-template-columns:repeat(3,1fr)} }
+
+  /* ── reçete paneli ── */
+  .panel{
+    background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow);
+    border-radius:3px; overflow:hidden;
+  }
+  .panel-bas{
+    display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+    padding:16px 20px; border-bottom:1px solid var(--line); background:var(--surface-2);
+  }
+  .panel-bas strong{font-family:"Bricolage Grotesque",sans-serif; font-size:16px}
+  .panel-bas .rozet{
+    margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:11px;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+  }
+  .tablo-sar{overflow-x:auto}
+  table{width:100%; border-collapse:collapse; font-size:15px}
+  th,td{padding:11px 20px; text-align:left; border-bottom:1px solid var(--line); white-space:nowrap}
+  th{
+    font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); font-weight:500;
+  }
+  td.sayi,th.sayi{text-align:right; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  tfoot td{background:var(--surface-2); font-weight:600}
+  .kar{color:var(--accent); font-weight:600}
+
+  .panel-not{
+    padding:14px 20px; border-top:1px solid var(--line); background:var(--surface-2);
+    font-size:14.5px; color:var(--ink-soft);
+  }
+
+  /* ── modüller ── */
+  .modul-grup{margin-bottom:34px}
+  .modul-grup h3{
+    font-size:13px; font-family:"IBM Plex Mono",monospace; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); font-weight:600;
+    margin:0 0 2px; padding-bottom:10px; border-bottom:1px solid var(--line);
+  }
+  .satir{
+    display:flex; gap:18px; align-items:baseline; padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .satir b{
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:600; font-size:16px;
+    min-width:210px; flex-shrink:0;
+  }
+  .satir span{color:var(--ink-soft); font-size:15.5px}
+  @media(max-width:640px){ .satir{flex-direction:column; gap:4px} .satir b{min-width:0} }
+
+  /* ── zincir ── */
+  .zincir{counter-reset:adim; display:grid; gap:18px}
+  @media(min-width:900px){ .zincir{grid-template-columns:repeat(4,1fr)} }
+  .adim{position:relative; padding-top:38px}
+  .adim::before{
+    counter-increment:adim; content:counter(adim);
+    position:absolute; top:0; left:0;
+    font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600;
+    width:26px; height:26px; border-radius:50%; display:grid; place-items:center;
+    background:var(--accent-soft); color:var(--accent);
+  }
+  .adim b{display:block; font-family:"Bricolage Grotesque",sans-serif; font-size:17px; margin-bottom:6px}
+  .adim p{margin:0; color:var(--ink-soft); font-size:15px}
+
+  
+  /* ── teknik ── */
+  .kutu-liste{display:grid; gap:2px; background:var(--line); border:1px solid var(--line)}
+  @media(min-width:760px){ .kutu-liste{grid-template-columns:repeat(2,1fr)} }
+  .kutu{background:var(--surface); padding:22px 24px}
+  .kutu b{display:block; font-family:"Bricolage Grotesque",sans-serif; font-size:16px; margin-bottom:6px}
+  .kutu p{margin:0; color:var(--ink-soft); font-size:15px}
+
+  /* ── iletişim ── */
+  .iletisim{background:var(--accent-soft); border:1px solid var(--line); border-radius:3px; padding:40px 32px}
+  .iletisim h2{margin-top:0}
+  .kanal{display:flex; gap:14px; flex-wrap:wrap; margin-top:22px}
+  .kanal .dugme{max-width:100%}
+  .kanal .mono{overflow-wrap:anywhere}
+
+  footer{padding:38px 0; color:var(--muted); font-size:14px}
+  footer .kap{display:flex; gap:16px; flex-wrap:wrap; align-items:center}
+  footer a{color:var(--muted)}
+
+  /* ── metnin yanındaki küçük ekran görüntüsü ── */
+  .hero-ic{display:grid; gap:34px; align-items:center}
+  @media(min-width:920px){ .hero-ic{grid-template-columns:1fr 360px} }
+
+  .metin-yan{display:grid; gap:24px; align-items:start; margin-bottom:36px}
+  @media(min-width:900px){ .metin-yan{grid-template-columns:1fr 300px} }
+
+  .grup-ic{display:grid; gap:26px; align-items:start}
+  @media(min-width:980px){ .grup-ic{grid-template-columns:1fr 320px} }
+  .grup-gorsel{display:grid; gap:12px; grid-template-columns:repeat(2,1fr)}
+
+  .mini{
+    display:block; width:100%; padding:0; text-align:left; cursor:zoom-in;
+    background:var(--surface); border:1px solid var(--line); border-radius:3px;
+    overflow:hidden; font:inherit; color:inherit;
+    transition:border-color .15s, box-shadow .15s, transform .15s;
+  }
+  .mini:hover{border-color:var(--accent); box-shadow:var(--shadow); transform:translateY(-2px)}
+  .mini img{
+    display:block; width:100%; height:auto; background:var(--surface-2);
+    border-bottom:1px solid var(--line);
+  }
+  .mini span{
+    display:block; padding:9px 12px; font-size:12px; color:var(--ink-soft);
+    font-family:"IBM Plex Mono",monospace; letter-spacing:.02em;
+  }
+  .mini span::after{content:" ⤢"; color:var(--accent); font-weight:600}
+
+  /* ── büyütme penceresi ── */
+  .buyut{
+    position:fixed; inset:0; z-index:60; display:none;
+    background:rgba(10,12,10,.92); padding:24px;
+    align-items:center; justify-content:center;
+  }
+  .buyut[open]{display:flex}
+  .buyut-ic{max-width:1500px; width:100%; display:flex; flex-direction:column; gap:12px}
+  .buyut img{
+    display:block; width:100%; height:auto; max-height:calc(100vh - 170px);
+    object-fit:contain; border-radius:3px; background:#000;
+  }
+  .buyut-yazi{color:#E8EBE6; font-size:14.5px; line-height:1.55; max-width:80ch; margin:0}
+  .buyut-yazi b{
+    display:block; font-family:"Bricolage Grotesque",sans-serif; font-size:16px;
+    margin-bottom:3px; color:#fff;
+  }
+  .buyut-kapat{
+    position:absolute; top:16px; right:18px; width:40px; height:40px; cursor:pointer;
+    background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.25);
+    border-radius:50%; font-size:20px; line-height:1;
+  }
+  .buyut-kapat:hover{background:rgba(255,255,255,.2)}
+  @media(max-width:640px){ .buyut{padding:12px} .buyut-kapat{top:8px; right:8px} }
+
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "OrSoft",
+      "url": "https://orsoftyazilim.com/",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Restoran stok ve maliyet yönetimi",
+      "operatingSystem": "Windows",
+      "inLanguage": "tr",
+      "description": "Restoranlar ve çok şubeli işletmeler için stok takip, gram bazlı reçete maliyeti, tedarikçi cari, sipariş, fatura ve kâr/zarar programı.",
+      "image": "https://orsoftyazilim.com/gorseller/ana-ekran.jpg",
+      "featureList": [
+        "Gram bazlı reçete maliyeti",
+        "Şube bazlı stok takibi",
+        "Tedarikçi cari hesap takibi",
+        "Malzeme siparişi ve fatura kaydı",
+        "Zayiat ve sevkiyat takibi",
+        "Kâr / zarar ve ciro raporları",
+        "Kullanıcı yetkilendirme",
+        "Otomatik yedekleme"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "TRY",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Organization",
+      "name": "OrSoft",
+      "url": "https://orsoftyazilim.com/",
+      "email": "orsoftyazilim@gmail.com",
+      "areaServed": "TR",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "email": "orsoftyazilim@gmail.com",
+        "availableLanguage": "Turkish"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+
+<header>
+  <div class="kap bar">
+    <div class="marka">OrSoft<span>.</span></div>
+    <nav>
+      <a class="gizle" href="#maliyet">Maliyet</a>
+      <a class="gizle" href="#moduller">Modüller</a>
+      <a class="gizle" href="#nasil">Nasıl çalışır</a>
+      <a class="dugme dugme-dolu" href="#iletisim">Demo iste</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="kap hero-ic">
+    <div>
+    <div class="etiket">Restoran stok ve maliyet programı</div>
+    <h1>Mutfağın hesabını gramla tutar.</h1>
+    <p class="spot">
+      Stok, tedarikçi cari, sipariş ve reçete maliyeti tek programda. Bir porsiyon Adana'nın
+      bugün size kaça mal olduğunu, hangi şubenin ne kadar zayiat verdiğini ve piyasaya ne
+      borcunuz olduğunu aynı ekrandan görürsünüz.
+    </p>
+    <div class="hero-eylem">
+      <a class="dugme dugme-dolu" href="#iletisim">WhatsApp'tan demo iste</a>
+      <a class="dugme dugme-bos" href="#maliyet">Nasıl hesapladığını gör</a>
+    </div>
+    <div class="kunye mono">
+      <span>Windows masaüstü</span><span>SQL Server</span><span>Sınırsız şube</span>
+      <span>Kullanıcı yetkileri</span><span>Otomatik yedekleme</span>
+    </div>
+    </div>
+    <div class="hero-gorsel">
+      <button class="mini" type="button" data-tam="gorseller/ana-ekran.jpg"
+              data-bas="Ana ekran" data-not="Kritik stok, vadesi gelen ödemeler, günün cirosu ve ayın gider dağılımı bir arada; altında son altı ayın gelir–gider karşılaştırması.">
+        <img src="gorseller/ana-ekran-k.jpg" decoding="async" fetchpriority="high"
+             width="520" height="219" alt="OrSoft ana ekran ekranı">
+        <span>Ana ekran</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="bolum">
+  <div class="kap">
+    <div class="etiket">Tanıdık geliyorsa</div>
+    <h2>Defterle yürüyen bir mutfak, kâr ettiğini sanır.</h2>
+    <p class="alt">
+      Restoran ve kafelerin çoğu ciroyu bilir, maliyetini bilmez. Aradaki fark ay sonunda ortaya çıkar
+      ve kimse sebebini gösteremez.
+    </p>
+
+    <div class="dert-liste">
+      <div class="dert">
+        <q>Ciro iyi ama para kalmıyor.</q>
+        <p>
+          Menü fiyatını rakibe bakarak koyuyorsanız, maliyetiniz artınca fiyatınız yerinde
+          kalır. OrSoft her porsiyonun malzeme maliyetini güncel alış fiyatlarından hesaplar;
+          zarar ettiğiniz ürünü size söyler.
+        </p>
+      </div>
+      <div class="dert">
+        <q>Tedarikçiye ne borcum var bilmiyorum.</q>
+        <p>
+          Faturalar çekmecede, ödemeler akılda. OrSoft faturayı girdiğiniz anda borcu
+          oluşturur, ödediğinizde kapatır; her firmanın kalan borcunu tek listede gösterir.
+        </p>
+      </div>
+      <div class="dert">
+        <q>Şubeler arasında ne kayboluyor?</q>
+        <p>
+          Sayım yapılır, fark çıkar, unutulur. OrSoft sayım farkını malzeme ve şube bazında
+          kaydeder — kimin ne zaman saydığıyla birlikte.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bolum" id="maliyet">
+  <div class="kap">
+    <div class="etiket">Farkımız</div>
+    <h2>Gram bazlı reçete maliyeti</h2>
+    <div class="metin-yan">
+      <p class="alt" style="margin-bottom:0">
+        Basit stok programları "kaç kilo et kaldı" der. OrSoft "bu porsiyon bana kaça mal
+        oluyor" sorusunu cevaplar — çünkü her malzemenin maliyetini hareketli ağırlıklı
+        ortalamayla, gram bazında takip eder. Programın reçete ekranı yanda; büyütmek için
+        üzerine tıklayın.
+      </p>
+      <button class="mini" type="button" data-tam="gorseller/recete.jpg"
+              data-bas="Reçete oluşturma" data-not="Adana kebabın içine giren yedi malzeme, gram ve adet cinsinden. Porsiyon maliyetini program güncel alış fiyatlarından kendisi hesaplar.">
+        <img src="gorseller/recete-k.jpg" decoding="async" loading="lazy"
+             width="520" height="219" alt="OrSoft reçete oluşturma ekranı">
+        <span>Reçete oluşturma</span>
+      </button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-bas">
+        <strong>Adana Porsiyon</strong>
+        <span class="mono" style="color:var(--muted); font-size:13px">reçete maliyeti</span>
+        <span class="rozet">örnek</span>
+      </div>
+      <div class="tablo-sar">
+        <table>
+          <thead>
+            <tr>
+              <th>Malzeme</th>
+              <th class="sayi">Miktar</th>
+              <th class="sayi">Birim maliyet</th>
+              <th class="sayi">Tutar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kıyma (kuzu·dana)</td><td class="sayi">180 g</td><td class="sayi">0,4120 ₺/g</td><td class="sayi">74,16 ₺</td></tr>
+            <tr><td>Kuyruk yağı</td><td class="sayi">20 g</td><td class="sayi">0,2850 ₺/g</td><td class="sayi">5,70 ₺</td></tr>
+            <tr><td>Lavaş</td><td class="sayi">1 adet</td><td class="sayi">4,2000 ₺</td><td class="sayi">4,20 ₺</td></tr>
+            <tr><td>Sivri biber</td><td class="sayi">60 g</td><td class="sayi">0,0640 ₺/g</td><td class="sayi">3,84 ₺</td></tr>
+            <tr><td>Domates</td><td class="sayi">70 g</td><td class="sayi">0,0480 ₺/g</td><td class="sayi">3,36 ₺</td></tr>
+            <tr><td>Soğan · maydanoz · sumak</td><td class="sayi">45 g</td><td class="sayi">0,0510 ₺/g</td><td class="sayi">2,30 ₺</td></tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Porsiyon maliyeti</td>
+              <td class="sayi"></td>
+              <td class="sayi"></td>
+              <td class="sayi">93,56 ₺</td>
+            </tr>
+            <tr>
+              <td>Satış fiyatı · brüt kâr</td>
+              <td class="sayi"></td>
+              <td class="sayi mono kar">%64</td>
+              <td class="sayi">260,00 ₺</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="panel-not">
+        Kıymanın kilosu 20 lira zamlandığında bu tablo kendiliğinden değişir — çünkü maliyet
+        menüye elle girilen bir sayı değil, son faturalarınızdan hesaplanır.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bolum" id="nasil">
+  <div class="kap">
+    <div class="etiket">Günlük akış</div>
+    <h2>Siparişten stoğa, tek zincir</h2>
+    <div class="metin-yan">
+      <p class="alt" style="margin-bottom:0">
+        Aynı bilgiyi iki kez yazmazsınız. Her adım bir öncekinden beslenir. Zincir
+        tedarikçi siparişiyle başlar — yandaki ekran.
+      </p>
+      <button class="mini" type="button" data-tam="gorseller/siparis.jpg"
+              data-bas="Tedarikçi siparişi" data-not="Kategoriye göre malzeme seçilir, satırlar eklenir. Sipariş formu PDF olur ya da doğrudan WhatsApp'tan tedarikçiye gider.">
+        <img src="gorseller/siparis-k.jpg" decoding="async" loading="lazy"
+             width="520" height="219" alt="OrSoft tedarikçi siparişi ekranı">
+        <span>Tedarikçi siparişi</span>
+      </button>
+    </div>
+
+    <div class="zincir">
+      <div class="adim">
+        <b>Sipariş</b>
+        <p>Kategoriye göre malzeme seçilir, sipariş formu PDF olur ve tedarikçiye WhatsApp'tan gider.</p>
+      </div>
+      <div class="adim">
+        <b>Teslim</b>
+        <p>Gelen miktarlar işlenir. Eksik geldiyse sipariş "kısmi teslim" olarak kalır, takipte kaybolmaz.</p>
+      </div>
+      <div class="adim">
+        <b>Fatura</b>
+        <p>Sipariş faturaya tek tuşla aktarılır; fiyat, KDV ve iskonto burada girilir. Aynı faturayı ikinci kez girmeye kalkarsanız uyarır.</p>
+      </div>
+      <div class="adim">
+        <b>Stok &amp; maliyet</b>
+        <p>Şube stoğu artar, malzemenin ortalama maliyeti güncellenir, tedarikçi borcu oluşur.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bolum" id="moduller">
+  <div class="kap">
+    <div class="etiket">Kapsam</div>
+    <h2>Restoran ve kafeler için ne yapar</h2>
+    <p class="alt">Restoran, kafe ve çok şubeli işletmelerin günlük işini bitiren modüller.</p>
+
+    <div class="modul-grup">
+      <h3>Stok ve satın alma</h3>
+      <div class="grup-ic">
+        <div><div class="satir"><b>Tedarikçi siparişi</b><span>Antetli PDF sipariş formu, WhatsApp'tan gönderim, kısmi teslim takibi</span></div>
+      <div class="satir"><b>Fatura kayıt</b><span>Çok kalemli giriş, KDV ve iskonto, peşin/kartlı/açık hesap ayrımı</span></div>
+      <div class="satir"><b>Envanter sayımı</b><span>Sistem stoğu ile fiziki sayım farkı, malzeme ve şube bazında, sayan kullanıcıyla</span></div>
+      <div class="satir"><b>Şubeler arası sevkiyat</b><span>Bir şubeden diğerine transfer; iki tarafın stoğu birlikte hareket eder</span></div>
+      <div class="satir"><b>Zayiat</b><span>Bozulan, düşen, iade edilen — sebebiyle birlikte kayıt altında</span></div>
+        </div>
+        <div class="grup-gorsel">
+          <button class="mini" type="button" data-tam="gorseller/kritik-stok.jpg"
+                  data-bas="Kritik stok uyarısı" data-not="Limitin altına düşen malzemeler şube seçimiyle listelenir ve tek tuşla siparişe eklenir.">
+            <img src="gorseller/kritik-stok-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft kritik stok uyarısı ekranı">
+            <span>Kritik stok uyarısı</span>
+          </button>
+          <button class="mini" type="button" data-tam="gorseller/malzeme-kartlari.jpg"
+                  data-bas="Malzeme kartları" data-not="Her malzemenin ortalama alış fiyatı, kritik limiti ve şube şube stoğu tek tabloda.">
+            <img src="gorseller/malzeme-kartlari-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft malzeme kartları ekranı">
+            <span>Malzeme kartları</span>
+          </button>
+          <button class="mini" type="button" data-tam="gorseller/sevkiyat.jpg"
+                  data-bas="Şubeler arası sevkiyat" data-not="Bir şubeden diğerine transfer; iki şubenin stoğu birlikte hareket eder.">
+            <img src="gorseller/sevkiyat-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft şubeler arası sevkiyat ekranı">
+            <span>Şubeler arası sevkiyat</span>
+          </button>
+          <button class="mini" type="button" data-tam="gorseller/zayiat.jpg"
+                  data-bas="Zayiat girişi" data-not="Bozulan, son kullanma tarihi geçen, soğuk zinciri bozulan malzeme sebebiyle kaydedilir.">
+            <img src="gorseller/zayiat-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft zayiat girişi ekranı">
+            <span>Zayiat girişi</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modul-grup">
+      <h3>Para</h3>
+      <div class="grup-ic">
+        <div><div class="satir"><b>Tedarikçi cari</b><span>Firma bazında toplam alım, ödenen, kalan borç; ödeme geçmişi</span></div>
+      <div class="satir"><b>Kasa ve banka defteri</b><span>Nakit, kredi kartı, havale hareketleri; dönem ve şube filtresiyle</span></div>
+      <div class="satir"><b>Genel giderler</b><span>Kira, elektrik, stoğa girmeyen alımlar — çok kalemli fatura girişiyle</span></div>
+      <div class="satir"><b>Şube ciro girişi</b><span>Nakit, kredi kartı, yemek kartı ve online satışların günlük girişi</span></div>
+        </div>
+        <div class="grup-gorsel">
+          <button class="mini" type="button" data-tam="gorseller/fatura-kayit.jpg"
+                  data-bas="Fatura kayıt" data-not="Çok kalemli fatura girişi: KDV, iskonto ve ödeme şekli burada. Siparişten gelen kalemler tek tuşla faturaya aktarılır.">
+            <img src="gorseller/fatura-kayit-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft fatura kayıt ekranı">
+            <span>Fatura kayıt</span>
+          </button>
+          <button class="mini" type="button" data-tam="gorseller/ciro-giris.jpg"
+                  data-bas="Şube ciro girişi" data-not="Nakit, kredi kartı, yemek kartı ve online kanal satışları günlük girilir.">
+            <img src="gorseller/ciro-giris-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft şube ciro girişi ekranı">
+            <span>Şube ciro girişi</span>
+          </button>
+          <button class="mini" type="button" data-tam="gorseller/genel-giderler.jpg"
+                  data-bas="Genel giderler" data-not="Kira, SGK, tamir-bakım, reklam gibi stoğa girmeyen harcamalar. Tek fatura birden çok kalem olabilir.">
+            <img src="gorseller/genel-giderler-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft genel giderler ekranı">
+            <span>Genel giderler</span>
+          </button>
+          <button class="mini" type="button" data-tam="gorseller/fatura-liste.jpg"
+                  data-bas="Fatura listesi" data-not="Tarih aralığı, şube ve fatura numarasıyla arama. Liste Excel'e ya da PDF'e aktarılır.">
+            <img src="gorseller/fatura-liste-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft fatura listesi ekranı">
+            <span>Fatura listesi</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modul-grup">
+      <h3>Görmek ve yönetmek</h3>
+      <div class="grup-ic">
+        <div><div class="satir"><b>Kâr / zarar raporu</b><span>Ciro, mal maliyeti, genel gider ve net kâr — şube kırılımıyla</span></div>
+      <div class="satir"><b>Ödeme raporları</b><span>Hangi ay ne kadar nakit, ne kadar kartla ödendi; satır satır döküm</span></div>
+      <div class="satir"><b>Reçete yönetimi</b><span>Menü ürününün içindeki malzemeler ve gramajları</span></div>
+      <div class="satir"><b>Kullanıcı yetkileri</b><span>Her ekran için ayrı yetki; kişi sadece yapabildiği işi görür</span></div>
+      <div class="satir"><b>Denetim izi</b><span>Kim, ne zaman, neyi değiştirdi — kayıt altında</span></div>
+        </div>
+        <div class="grup-gorsel">
+          <button class="mini" type="button" data-tam="gorseller/sube-karsilastirma.jpg"
+                  data-bas="Şube karşılaştırma" data-not="Hangi şube kazandırıyor: ciro, mal maliyeti, brüt kâr, genel gider, net kâr ve kâr marjı tek tabloda.">
+            <img src="gorseller/sube-karsilastirma-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft şube karşılaştırma ekranı">
+            <span>Şube karşılaştırma</span>
+          </button>
+          <button class="mini" type="button" data-tam="gorseller/ciro-raporu.jpg"
+                  data-bas="Ciro raporu" data-not="POS/adisyon cirosu ile elle girilen şube cirosu yan yana, şube kırılımıyla.">
+            <img src="gorseller/ciro-raporu-k.jpg" decoding="async" loading="lazy"
+                 width="520" height="219" alt="OrSoft ciro raporu ekranı">
+            <span>Ciro raporu</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bolum">
+  <div class="kap">
+    <div class="etiket">Teknik</div>
+    <h2>Program nasıl kurulur</h2>
+    <p class="alt">Aylık abonelik yok; yazılım da veriler de sizde kalır.</p>
+
+    <div class="kutu-liste">
+      <div class="kutu">
+        <b>Windows masaüstü uygulaması</b>
+        <p>Tarayıcı gerekmez, internet kesildiğinde yerel ağda çalışmaya devam eder.</p>
+      </div>
+      <div class="kutu">
+        <b>Tek şube veya çok şube</b>
+        <p>Tek işletmede bir bilgisayar yeterli. Şubeler artınca hepsi aynı sunucuya bağlanır, veriler tek yerde toplanır.</p>
+      </div>
+      <div class="kutu">
+        <b>Otomatik yedekleme</b>
+        <p>Her gece veritabanının yedeği alınır ve okunabilirliği doğrulanır. Eski yedekler otomatik temizlenir.</p>
+      </div>
+      <div class="kutu">
+        <b>Veri sizin</b>
+        <p>Yazılım SQL Server üzerinde çalışır; kendi sunucunuzda ya da işletmenizdeki bilgisayarda durur.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bolum" id="iletisim" style="border-bottom:none">
+  <div class="kap">
+    <div class="iletisim">
+      <div class="etiket">İletişim</div>
+      <h2>Mutfağınıza uyar mı, yarım saatte belli olur.</h2>
+      <p style="color:var(--ink-soft); max-width:56ch; margin:0">
+        Bize işletmenizi anlatın, size programı gösterelim. Kurulum ve veri aktarımı dahil
+        neyin ne kadar süreceğini baştan söyleriz.
+      </p>
+
+      <div class="kanal">
+        <a class="dugme dugme-dolu" href="https://wa.me/905335243566">WhatsApp: <span class="mono">0533 524 35 66</span></a>
+        <a class="dugme dugme-bos" href="mailto:orsoftyazilim@gmail.com">E-posta: <span class="mono">orsoftyazilim@gmail.com</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="kap">
+    <span class="marka" style="font-size:17px">OrSoft<span style="color:var(--accent)">.</span></span>
+    <span>Restoran stok ve maliyet yönetimi</span>
+    <span style="margin-left:auto" class="mono">© 2026</span>
+  </div>
+</footer>
+
+
+<div class="buyut" id="buyut" role="dialog" aria-modal="true" aria-label="Ekran görüntüsü">
+  <button class="buyut-kapat" type="button" id="buyutKapat" aria-label="Kapat">&times;</button>
+  <div class="buyut-ic">
+    <img id="buyutResim" src="" alt="">
+    <p class="buyut-yazi"><b id="buyutBas"></b><span id="buyutNot"></span></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var kutu = document.getElementById('buyut');
+  var resim = document.getElementById('buyutResim');
+  var bas = document.getElementById('buyutBas');
+  var aciklama = document.getElementById('buyutNot');
+  var kapatDugme = document.getElementById('buyutKapat');
+  var sonOdak = null;
+
+  var sira = 0;
+  function ac(d){
+    sonOdak = d;
+    var kucukEtiket = d.querySelector('img');
+    var tamYol = d.getAttribute('data-tam');
+    // once ONBELLEKTEKI kucuk hali goster: pencere asla bos acilmasin
+    resim.src = kucukEtiket.currentSrc || kucukEtiket.src;
+    resim.alt = kucukEtiket.alt;
+    bas.textContent = d.getAttribute('data-bas');
+    aciklama.textContent = d.getAttribute('data-not');
+    kutu.setAttribute('open','');
+    document.body.style.overflow = 'hidden';
+    kapatDugme.focus();
+    // tam boy inince degistir — arada baska bir ekran acildiysa dokunma
+    sira++;
+    var benim = sira;
+    var yedek = new Image();
+    yedek.onload = function(){
+      if (benim === sira && kutu.hasAttribute('open')) { resim.src = tamYol; }
+    };
+    yedek.src = tamYol;
+  }
+  function kapat(){
+    sira++;
+    kutu.removeAttribute('open');
+    document.body.style.overflow = '';
+    resim.removeAttribute('src');
+    if (sonOdak) { sonOdak.focus(); }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.mini'), function(d){
+    d.addEventListener('click', function(){ ac(d); });
+  });
+  kapatDugme.addEventListener('click', kapat);
+  kutu.addEventListener('click', function(e){ if (e.target === kutu) { kapat(); } });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && kutu.hasAttribute('open')) { kapat(); }
+  });
+})();
+</script>
+
+</body>
+</html>
